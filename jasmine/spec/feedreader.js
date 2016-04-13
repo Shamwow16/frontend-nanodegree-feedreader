@@ -113,22 +113,49 @@ $(function() {
         var entryArray = [];
         beforeEach(function(done) {
             loadFeed(testFeedID, function() {
-                entryArray = $('.entry');
+
                 done();
             });
         });
 
         it('has at least one .entry element within the .feed container', function(done) {
+            entryArray = $('.entry');
             expect(entryArray.length).not.toBe(0);
             done();
         })
 
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection"
-
+    /* TODO: Write a new test suite named "New Feed Selection" */
+    describe('New Feed Selection', function() {
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+        var randomFeedID = Math.floor(Math.random() * allFeeds.length);
+        var randomFeedItem;
+        var initialFeedArticle;
+        var newFeedInitialArticle;
+
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                initialFeedArticle = $('.entry')[0];
+            });
+
+            loadFeed(1, function() {
+                newFeedInitialArticle = $('.entry')[0];
+                done();
+            });
+
+        });
+
+        it('changes content when a new feed is loaded', function(done) {
+            expect(newFeedInitialArticle).not.toBe(initialFeedArticle);
+            done();
+        });
+
+        afterEach(function() {
+            loadFeed(0);
+        });
+    });
 }());
