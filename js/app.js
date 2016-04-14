@@ -149,18 +149,19 @@ $(function() {
     });
 
     var searchBox = $('.search');
+    var articlesList;
     /*The code below covers the implementation of the filtering by search option for a user. It updates the list of feed entries
     based on what is entered in the search box. If the search box is empty, then all articles will show. The "change" event handler is
     fired anytime a key is pressed.
     */
-    searchBox.change(function() {
+    searchBox.on('change', function() {
         var filter = $(this).val();
-        var articlesList = $('.list article');
+        articlesList = $('.list article');
         if (filter) {
-            articlesList.find("h2:not(:Contains(" + filter + "))").closest("article").slideUp();
-            articlesList.find("h2:Contains(" + filter + ")").closest("article").slideDown();
+            articlesList.find("h2:not(:Contains(" + filter + "))").closest("article").hide();
+            articlesList.find("h2:Contains(" + filter + ")").closest("article").show();
         } else {
-            articlesList.find("h2").closest("article").slideDown();
+            articlesList.find("h2").closest("article").show();
         }
     }).keyup(function() {
         $(this).change();

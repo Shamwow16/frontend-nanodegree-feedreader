@@ -162,22 +162,52 @@ var randomFeedItem;
         });
     });
 
-  /*  describe('The Current Feed', function() {
-      var searchBox = $('.search');
-      beforeEach(function(done) {
-          loadFeed(0, function() {
+    describe('The Current Feed', function() {
+        var searchBox = $('.search');
+        var word;
+        var titleArray;
+        var counter;
+        var titles;
+        var newTitles;
+        beforeEach(function(done) {
+            loadFeed(0, function() {
+                titles = $('.title');
+                titles.splice((titles.length) - 1, 1);
+                counter = 0;
+                word = titles.html().substr(0, titles.html().indexOf(' '));
 
-              done();
-          })
+                for (var i = 0; i < titles.length - 1; i++) {
+                    var titleText = titles[i].innerHTML;
+                    if (titleText.indexOf(word) == -1) {
+                        counter++;
+                    }
+                }
+                searchBox.val(word);
 
-      })
 
-      it('filters out articles based on the search box', function(done)) {
-          done();
-      }
+                done();
+
+            })
 
 
-  });
-*/
+
+        })
+
+        it('filters out articles based on the search box', function(done) {
+            searchBox.trigger('change');
+            newTitles = $('.title:visible');
+            newTitles.splice((newTitles.length) - 1, 1);
+            expect(newTitles.length).not.toBe(titles.length);
+            done();
+        });
+
+        afterEach(function() {
+            searchBox.val('');
+            searchBox.trigger('change');
+        })
+
+
+    });
+
 
 }());
