@@ -90,3 +90,9 @@ h2 {
     padding: 1em;
     margin: 0.5em 0;
 }
+
+.search {
+    margin-left: 40vw;
+    width: 14em;
+    color: #333;
+}

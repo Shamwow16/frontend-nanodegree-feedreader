@@ -24,6 +24,10 @@ var allFeeds = [{
 
 ];
 
+
+
+
+
 /* This function starts up our application. The Google Feed
  * Reader API is loaded asynchonously and will then call this
  * function when the API is loaded.
@@ -32,6 +36,8 @@ function init() {
     // Load the first feed we've defined (index of 0).
     loadFeed(0);
 }
+
+
 
 /* This function performs everything necessary to load a
  * feed using the Google Feed Reader API. It will then
@@ -43,7 +49,8 @@ function init() {
  */
 function loadFeed(id, cb) {
     var feedUrl = allFeeds[id].url,
-        feedName = allFeeds[id].name;
+        feedName = allFeeds[id].name,
+        titleArray = [];
 
     $.ajax({
         type: "POST",
@@ -58,8 +65,18 @@ function loadFeed(id, cb) {
                 entriesLen = entries.length,
                 entryTemplate = Handlebars.compile($('.tpl-entry').html());
 
+            /*Loop through the feed entries and push each title into an array. This array is then bound to the
+            Search box using Autocomplete.js which allows for autocompletion on the input.*/
             title.html(feedName); // Set the header text
             container.empty(); // Empty out all previous entries
+            entries.forEach(function(entry) {
+                titleArray.push(entry.title);
+            })
+
+            $(".search").autocomplete({
+                source: titleArray
+            });
+
 
             /* Loop through the entries we just loaded via the Google
              * Feed Reader API. We'll then parse that entry against the
@@ -69,6 +86,7 @@ function loadFeed(id, cb) {
             entries.forEach(function(entry) {
                 container.append(entryTemplate(entry));
             });
+
 
             if (cb) {
                 cb();
@@ -114,6 +132,10 @@ $(function() {
         feedId++;
     });
 
+    jQuery.expr[':'].Contains = function(a, i, m) {
+        return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
+    };
+
     /* When a link in our feedList is clicked on, we want to hide
      * the menu, load the feed, and prevent the default action
      * (following the link) from occurring.
@@ -124,6 +146,24 @@ $(function() {
         $('body').addClass('menu-hidden');
         loadFeed(item.data('id'));
         return false;
+    });
+
+    var searchBox = $('.search');
+    /*The code below covers the implementation of the filtering by search option for a user. It updates the list of feed entries
+    based on what is entered in the search box. If the search box is empty, then all articles will show. The "change" event handler is
+    fired anytime a key is pressed.
+    */
+    searchBox.change(function() {
+        var filter = $(this).val();
+        var articlesList = $('.list article');
+        if (filter) {
+            articlesList.find("h2:not(:Contains(" + filter + "))").closest("article").slideUp();
+            articlesList.find("h2:Contains(" + filter + ")").closest("article").slideDown();
+        } else {
+            articlesList.find("h2").closest("article").slideDown();
+        }
+    }).keyup(function() {
+        $(this).change();
     });
 
     /* When the menu icon is clicked on, we need to toggle a class

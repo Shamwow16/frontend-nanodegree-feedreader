@@ -132,25 +132,28 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        var randomFeedID = Math.floor(Math.random() * allFeeds.length);
-        var randomFeedItem;
-        var initialFeedArticle;
-        var newFeedInitialArticle;
+        /*var randomFeedID = Math.floor(Math.random() * allFeeds.length);
+var randomFeedItem;
+*/
+        var initialFeedContents;
+        var newFeedContents;
 
         beforeEach(function(done) {
             loadFeed(0, function() {
-                initialFeedArticle = $('.entry')[0];
+                initialFeedContents = $('.feed').html();
             });
 
+
             loadFeed(1, function() {
-                newFeedInitialArticle = $('.entry')[0];
+                newFeedContents = $('.feed').html();
                 done();
             });
 
         });
 
         it('changes content when a new feed is loaded', function(done) {
-            expect(newFeedInitialArticle).not.toBe(initialFeedArticle);
+            expect(initialFeedContents).not.toEqual(newFeedContents);
+
             done();
         });
 
@@ -158,4 +161,23 @@ $(function() {
             loadFeed(0);
         });
     });
+
+  /*  describe('The Current Feed', function() {
+      var searchBox = $('.search');
+      beforeEach(function(done) {
+          loadFeed(0, function() {
+
+              done();
+          })
+
+      })
+
+      it('filters out articles based on the search box', function(done)) {
+          done();
+      }
+
+
+  });
+*/
+
 }());
