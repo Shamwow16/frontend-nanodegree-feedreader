@@ -162,6 +162,7 @@ var randomFeedItem;
         });
     });
 
+/*The test below makes sure that the current feed filters out articles based on the search box.*/
     describe('The Current Feed', function() {
         var searchBox = $('.search');
         var word;
